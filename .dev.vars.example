@@ -1,0 +1,2 @@
+# Local Cloudflare Worker secrets. Copy this file to .dev.vars and replace placeholder values.
+STEAM_API_KEY=replace-with-a-steam-web-api-key

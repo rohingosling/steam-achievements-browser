@@ -1,0 +1,25 @@
+{
+    "$schema": "./node_modules/wrangler/config-schema.json",
+    "name": "steam-achievement-browser",
+    "compatibility_date": "2026-08-29",
+    "main": "./src/index.ts",
+    "assets": {
+        "binding": "ASSETS",
+        "directory": "./public",
+        "run_worker_first": [
+            "/api",
+            "/api/*"
+        ]
+    },
+    "kv_namespaces": [
+        {
+            "binding": "GAME_CACHE",
+            "id": "6f93087f275a409da0f68ad8fbb16e73"
+        }
+    ],
+    "secrets": {
+        "required": [
+            "STEAM_API_KEY"
+        ]
+    }
+}

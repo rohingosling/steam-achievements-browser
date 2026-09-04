@@ -1,0 +1,1059 @@
+/*---------------------------------------------------------------------------------------------------------------------
+   File:   css/components.css
+   Author: Rohin Gosling
+
+   Description:
+
+     The individual pieces of chrome: the banner fallback, semantic progress region, native controls, list status,
+     achievement row, and list viewport scrollbar. Where layout.css positions the four card blocks relative to one
+     another, this file styles what sits inside them.
+
+     No literal colour or dimension appears in this file. Everything comes from css/tokens.css.
+
+   Notes:
+
+     Nothing here may be more ornamented than the Version 1 visual baseline. Semantic rows remain flat,
+     square-cornered plates, so corner radii, borders, and shadows stay minimal.
+
+     This file is loaded last of the three, so a rule here wins a specificity tie against layout.css.
+---------------------------------------------------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------------------------------------------------
+   User ID card.
+
+   The logo is the unchanged official square Valve asset and remains visually separate from the product heading.
+   The form uses the same recessed native-control treatment as the achievement card. Its status line reserves one
+   line so resolving and validation feedback do not move the compact card around.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.user-card__logo
+{
+    width      : var( --user-logo-size );
+    height     : var( --user-logo-size );
+    margin-inline : auto;
+    object-fit : contain;
+}
+
+.user-card__title
+{
+    margin-top  : calc( 2 * var( --gap ) );
+    color       : var( --colour-text-strong );
+    font-size   : var( --font-size-user-title );
+    font-weight : var( --font-weight-strong );
+    text-align  : center;
+}
+
+.user-card__version
+{
+    margin-top : calc( var( --gap ) / 2 );
+    color      : var( --colour-text-muted );
+    font-size  : var( --font-size-row-metadata );
+    text-align : center;
+}
+
+.user-card__form
+{
+    margin-top : calc( 3 * var( --gap ) );
+}
+
+.user-card__label
+{
+    color       : var( --colour-text-muted );
+    user-select : none;
+}
+
+.user-card__input
+{
+    width            : 100%;
+    height           : var( --control-height );
+    min-width        : 0;
+    padding-inline   : var( --gap );
+    border           : var( --border-width ) solid var( --colour-bar );
+    border-radius    : var( --border-radius );
+    background-color : var( --colour-page );
+    color            : var( --colour-text );
+    font-family      : inherit;
+    font-size        : inherit;
+    line-height      : inherit;
+}
+
+.user-card__input::placeholder
+{
+    color   : var( --colour-text-muted );
+    opacity : 1;
+}
+
+.user-card__input:hover
+{
+    border-color : var( --colour-text-muted );
+}
+
+.user-card__input:focus-visible,
+.user-card__submit:focus-visible,
+.user-card__help-link:focus-visible,
+.banner-header__action:focus-visible,
+.achievement-card__github-link:focus-visible
+{
+    outline        : var( --focus-ring-width ) solid var( --colour-accent );
+    outline-offset : var( --border-width );
+}
+
+.user-card__input[aria-invalid="true"]
+{
+    border-color : var( --colour-gold );
+}
+
+.user-card__submit
+{
+    height           : var( --control-height );
+    padding-inline   : calc( 2 * var( --gap ) );
+    border           : var( --border-width ) solid var( --colour-bar );
+    border-radius    : var( --border-radius );
+    background-color : var( --colour-page );
+    color            : var( --colour-text );
+    font-family      : inherit;
+    font-size        : inherit;
+    line-height      : inherit;
+    cursor           : pointer;
+    white-space      : nowrap;
+}
+
+.user-card__submit:hover
+{
+    border-color : var( --colour-text-muted );
+}
+
+.user-card__help
+{
+    margin-top : calc( 2 * var( --gap ) );
+    color      : var( --colour-text-muted );
+}
+
+.user-card__help p + p
+{
+    margin-top : var( --gap );
+}
+
+.user-card__help-link
+{
+    color : var( --colour-accent );
+}
+
+.user-card__status
+{
+    min-height : calc( var( --font-size-ui ) * var( --line-height-ui ) );
+    margin-top : calc( 2 * var( --gap ) );
+    color      : var( --colour-text );
+}
+
+.user-card__status[data-status="error"]
+{
+    color : var( --colour-gold );
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Screenshot generation progress.
+
+   The short-lived native dialog uses the existing flat Steam plate treatment. Its progress value represents the
+   completed workflow stages rather than a fabricated elapsed-time percentage. A separate live node announces only
+   stage transitions, while the visible message may update detailed counts without flooding assistive technology.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.screenshot-progress-dialog
+{
+    padding          : 0;
+    border           : var( --border-width ) solid var( --colour-bar );
+    border-radius    : var( --border-radius );
+    background-color : var( --colour-plate );
+    color            : var( --colour-text );
+}
+
+.screenshot-progress-dialog::backdrop
+{
+    background-color : var( --colour-overlay-backdrop );
+}
+
+.screenshot-progress-dialog__content
+{
+    padding : calc( 3 * var( --gap ) );
+}
+
+.screenshot-progress-dialog__title
+{
+    color       : var( --colour-text-strong );
+    font-size   : var( --font-size-row-title );
+    font-weight : var( --font-weight-strong );
+}
+
+.screenshot-progress-dialog__title:focus
+{
+    outline : none;
+}
+
+.screenshot-progress-dialog__stage
+{
+    margin-top : calc( 2 * var( --gap ) );
+    color      : var( --colour-text-muted );
+}
+
+.screenshot-progress-dialog__bar
+{
+    width              : 100%;
+    height             : var( --progress-bar-height );
+    margin-top         : var( --gap );
+    overflow           : hidden;
+    border             : 0;
+    border-radius      : var( --border-radius );
+    appearance         : none;
+    -webkit-appearance : none;
+    background-color   : var( --colour-scrollbar-track );
+    color              : var( --colour-accent );
+}
+
+.screenshot-progress-dialog__bar::-webkit-progress-bar
+{
+    background-color : var( --colour-scrollbar-track );
+}
+
+.screenshot-progress-dialog__bar::-webkit-progress-value
+{
+    background-color : var( --colour-accent );
+}
+
+.screenshot-progress-dialog__bar::-moz-progress-bar
+{
+    background-color : var( --colour-accent );
+}
+
+.screenshot-progress-dialog__message
+{
+    min-height : calc( 2 * var( --font-size-ui ) * var( --line-height-ui ) );
+    margin-top : var( --gap );
+    color      : var( --colour-text );
+}
+
+.banner-header__action
+{
+    width            : var( --banner-action-width );
+    height           : var( --control-height );
+    padding          : 0 var( --gap );
+    border           : var( --border-width ) solid var( --colour-bar );
+    border-radius    : var( --border-radius );
+    background-color : var( --colour-page );
+    color            : var( --colour-text-muted );
+    font-family      : inherit;
+    font-size        : inherit;
+    line-height      : inherit;
+    cursor           : pointer;
+    opacity          : var( --banner-action-opacity );
+}
+
+.banner-header__action:hover
+{
+    border-color : var( --colour-text-muted );
+    color        : var( --colour-text );
+}
+
+.banner-header__action:disabled
+{
+    cursor : default;
+}
+
+.achievement-card__github-link,
+.achievement-card__github-link:visited
+{
+    max-width     : 100%;
+    overflow      : hidden;
+    color         : var( --colour-text-muted );
+    font-size     : var( --font-size-card-footer );
+    text-align    : right;
+    text-overflow : ellipsis;
+    white-space   : nowrap;
+}
+
+.achievement-card__github-link:hover
+{
+    color : var( --colour-text );
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Dynamic banner fallback.
+
+   Before game selection, the locally bundled Steam logo and application title repeat the User ID card's motif. After
+   selection, the logo is removed and the title element temporarily carries the game name while remote artwork loads,
+   remaining as the final fallback when every artwork source fails.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.banner-header__fallback
+{
+    min-width       : 0;
+    display         : flex;
+    flex-direction  : column;
+    align-items     : center;
+    justify-content : center;
+}
+
+.banner-header__logo
+{
+    width      : var( --user-logo-size );
+    height     : var( --user-logo-size );
+    object-fit : contain;
+}
+
+.banner-header__game-logo
+{
+    position       : absolute;
+    z-index        : 1;
+    bottom         : 20px;
+    left           : 20px;
+    max-width      : 42%;
+    max-height     : 40.6%;
+    width          : auto;
+    height         : auto;
+    object-fit     : contain;
+    pointer-events : none;
+    filter         : drop-shadow( 0 2px 6px rgb( 0 0 0 / 75% ) );
+}
+
+.banner-header__title
+{
+    max-width     : 100%;
+    margin-top    : calc( 2 * var( --gap ) );
+    overflow      : hidden;
+    color         : var( --colour-text-strong );
+    font-size     : clamp( 18px, 5vw, var( --font-size-banner-title ) );
+    font-weight   : var( --font-weight-strong );
+    text-align    : center;
+    text-overflow : ellipsis;
+    white-space   : nowrap;
+}
+
+.banner-header__version
+{
+    margin-top : calc( var( --gap ) / 2 );
+    color      : var( --colour-text-muted );
+    font-size  : var( --font-size-row-metadata );
+    text-align : center;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Achievement progress.
+
+   The native progress element supplies the platform's value/max accessibility semantics. Engine-specific selectors
+   only paint its two existing parts; they do not replace it with a custom div-based meter. The completion rosette is
+   a deliberately simplified SVG approximation of Steam desktop's award and appears only at 100%.
+
+   The section has no border: its earlier one-pixel bar-coloured outline was the faint edge visible against the card.
+   Card-coloured padding establishes the shared row/control inset without creating another painted container.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.achievement-progress
+{
+    padding-inline        : var( --gap ) calc( var( --gap ) + var( --scrollbar-width ) );
+    border                : 0;
+    display               : grid;
+    grid-template-columns : minmax( 0, 1fr );
+    align-content         : center;
+    align-items           : center;
+    background-color      : var( --colour-plate );
+}
+
+.achievement-progress[data-progress-complete="true"]
+{
+    grid-template-columns : var( --progress-rosette-width ) minmax( 0, 1fr );
+    column-gap            : var( --gap );
+}
+
+.achievement-progress__rosette
+{
+    width       : var( --progress-rosette-width );
+    height      : var( --progress-rosette-height );
+    grid-column : 1;
+    grid-row    : 1;
+    align-self  : center;
+    color       : var( --colour-gold );
+}
+
+.achievement-progress__rosette[hidden]
+{
+    display : none;
+}
+
+.achievement-progress__rosette-ribbon
+{
+    fill    : currentColor;
+    opacity : 0.65;
+}
+
+.achievement-progress__rosette-seal
+{
+    fill : currentColor;
+}
+
+.achievement-progress__rosette-centre
+{
+    fill         : var( --colour-plate );
+    stroke       : currentColor;
+    stroke-width : var( --border-width );
+}
+
+.achievement-progress__rosette-star
+{
+    fill : currentColor;
+}
+
+.achievement-progress__content
+{
+    min-width   : 0;
+    grid-column : 1;
+    display     : grid;
+    row-gap     : var( --gap );
+}
+
+.achievement-progress[data-progress-complete="true"] .achievement-progress__content
+{
+    grid-column : 2;
+}
+
+.achievement-progress__summary-row
+{
+    min-width       : 0;
+    display         : flex;
+    align-items     : baseline;
+    justify-content : space-between;
+    gap             : var( --gap );
+}
+
+.achievement-progress__summary
+{
+    min-width     : 0;
+    overflow      : hidden;
+    color         : var( --colour-text );
+    text-overflow : ellipsis;
+    white-space   : nowrap;
+}
+
+.achievement-progress__percentage
+{
+    flex        : 0 0 auto;
+    color       : var( --colour-text );
+    white-space : nowrap;
+}
+
+.achievement-progress__percentage[hidden]
+{
+    display : none;
+}
+
+.achievement-progress__bar
+{
+    width            : 100%;
+    height           : var( --progress-bar-height );
+    margin           : 0;
+    overflow         : hidden;
+    border           : 0;
+    border-radius    : var( --border-radius );
+    appearance       : none;
+    -webkit-appearance : none;
+    background-color : var( --colour-scrollbar-track );
+    color            : var( --colour-accent );
+}
+
+.achievement-progress__bar[hidden]
+{
+    display : none;
+}
+
+.achievement-progress__bar::-webkit-progress-bar
+{
+    background-color : var( --colour-scrollbar-track );
+}
+
+.achievement-progress__bar::-webkit-progress-value
+{
+    background-color : var( --colour-accent );
+}
+
+.achievement-progress__bar::-moz-progress-bar
+{
+    background-color : var( --colour-accent );
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Native controls.
+
+   A native select, restyled but not replaced. A custom listbox would have to reimplement type-ahead, the arrow and
+   Home/End key model, the platform's own popup behaviour, and the screen-reader semantics -- all of which the native
+   control already has and none of which this page needs to do differently.
+
+   appearance: none removes the platform's own field chrome so that the field can take the sampled palette. That also
+   removes the drop-down arrow, so the arrow is redrawn here. It is drawn as a pair of half-filled gradient squares
+   rather than as a pseudo-element, because a select cannot host generated content, and rather than as an inline SVG
+   data URI, because the colour inside a data URI would be a literal that no token could reach.
+
+   The field sits at the page colour rather than the plate colour: the control bar is already plate, so a recessed
+   darker field reads as an input without needing a border to say so.
+
+   Field widths are flex bases with shrink allowed and automatic minimum sizes cleared rather than minimum widths.
+   This lets both fields give space back before they can push the title or labels out of the card.
+---------------------------------------------------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------------------------------------------------
+   List title.
+
+   The card's name, and the page's only heading. Bold and white against the muted label beside it, at the same size
+   as everything else in the bar -- weight and value carry the emphasis, so the bar's height is unchanged.
+
+   It never shrinks or truncates. The responsive layout switches to one field per row before the preferred desktop
+   controls would compete with this heading for space.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.control-bar__title
+{
+    min-width   : 0;
+    display     : flex;
+    white-space : nowrap;
+    font-size   : var( --font-size-title );
+    font-weight : var( --font-weight-strong );
+    color       : var( --colour-text-strong );
+    user-select : none;
+}
+
+.control-bar__title:focus-visible
+{
+    outline        : var( --focus-ring-width ) solid var( --colour-accent );
+    outline-offset : var( --border-width );
+}
+
+.control-bar__identity
+{
+    min-width   : 0;
+    display     : flex;
+    align-items : center;
+    gap         : var( --gap );
+}
+
+.control-bar__avatar-frame
+{
+    width            : var( --user-avatar-size );
+    height           : var( --user-avatar-size );
+    flex             : 0 0 var( --user-avatar-size );
+    display          : grid;
+    overflow         : hidden;
+    background-color : var( --colour-bar );
+}
+
+.control-bar__avatar,
+.control-bar__avatar-placeholder
+{
+    width     : 100%;
+    height    : 100%;
+    grid-area : 1 / 1;
+}
+
+.control-bar__avatar
+{
+    object-fit : cover;
+}
+
+.control-bar__avatar-placeholder
+{
+    background-color : var( --colour-bar );
+}
+
+.control-bar__persona
+{
+    min-width     : 0;
+    overflow      : hidden;
+    text-overflow : ellipsis;
+    white-space   : nowrap;
+}
+
+.control-bar__title-suffix
+{
+    flex        : 0 0 auto;
+    white-space : pre;
+}
+
+.control-bar__label
+{
+    flex        : 0 0 auto;
+    color       : var( --colour-text-muted );
+    user-select : none;
+}
+
+.control-bar__field
+{
+    min-width   : 0;
+    display     : flex;
+    align-items : center;
+    gap         : var( --gap );
+}
+
+.control-bar__toggle
+{
+    flex        : 0 0 auto;
+    display     : flex;
+    align-items : center;
+    gap         : var( --gap );
+    white-space : nowrap;
+}
+
+.control-bar__checkbox
+{
+    width        : var( --control-checkbox-size );
+    height       : var( --control-checkbox-size );
+    margin       : 0;
+    accent-color : var( --colour-accent );
+    cursor       : pointer;
+}
+
+.control-bar__input,
+.control-bar__select
+{
+    height           : var( --control-height );
+    min-width        : 0;
+    padding-block    : 0;
+    border           : var( --border-width ) solid var( --colour-bar );
+    border-radius    : var( --border-radius );
+    background-color : var( --colour-page );
+    color            : var( --colour-text );
+    font-family      : inherit;
+    font-size        : inherit;
+    line-height      : inherit;
+}
+
+.control-bar__input
+{
+    flex           : 0 1 var( --user-input-width );
+    padding-inline : var( --gap );
+}
+
+.control-bar__input::placeholder
+{
+    color   : var( --colour-text-muted );
+    opacity : 1;
+}
+
+.control-bar__select
+{
+    flex                : 0 1 auto;
+    padding-inline      : var( --gap ) calc( 3 * var( --gap ) );
+    appearance          : none;
+    -webkit-appearance  : none;
+    background-image    : linear-gradient(  45deg, transparent 50%, var( --colour-text-muted ) 50% ),
+                          linear-gradient( 135deg, var( --colour-text-muted ) 50%, transparent 50% );
+    background-position : right calc( var( --gap ) + 5px ) center,
+                          right var( --gap ) center;
+    background-size     : 5px 5px, 5px 5px;
+    background-repeat   : no-repeat;
+    cursor              : pointer;
+}
+
+.control-bar__select--game
+{
+    flex-basis : var( --game-select-width );
+}
+
+.control-bar__select--sort
+{
+    flex-basis : var( --sort-select-width );
+}
+
+/* The popup is drawn by the platform, not by this page. Naming the colours here keeps the open list from
+   falling back to a system light theme in the engines that do honour them on option elements. */
+
+.control-bar__select option
+{
+    background-color : var( --colour-page );
+    color            : var( --colour-text );
+}
+
+.control-bar__input:hover,
+.control-bar__select:hover
+{
+    border-color : var( --colour-text-muted );
+}
+
+/* Keyboard focus only. A visible ring on every mouse click would be noise, but the ring must never be suppressed
+   for keyboard users -- it is the only thing that says where Tab has landed. */
+
+.control-bar__input:focus-visible,
+.control-bar__checkbox:focus-visible,
+.control-bar__select:focus-visible
+{
+    outline        : var( --focus-ring-width ) solid var( --colour-accent );
+    outline-offset : var( --border-width );
+}
+
+.control-bar__input[aria-invalid="true"]
+{
+    border-color : var( --colour-gold );
+}
+
+.control-bar__select:disabled
+{
+    color   : var( --colour-text-muted );
+    cursor  : default;
+    opacity : 1;
+}
+
+.control-bar__checkbox:disabled
+{
+    cursor  : default;
+    opacity : 0.55;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Screenshot-only controls.
+
+   Native select, checkbox, and progress elements are replaced inside the detached export clone. These static
+   equivalents preserve the current values and established palette while avoiding browser-specific form-control
+   omissions when HTML is rasterized through an SVG foreign object.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.screenshot-select
+{
+    display     : flex;
+    align-items : center;
+    overflow    : hidden;
+    white-space : nowrap;
+}
+
+.screenshot-select__value
+{
+    overflow      : hidden;
+    text-overflow : ellipsis;
+}
+
+.screenshot-checkbox
+{
+    position         : relative;
+    display          : block;
+    box-sizing       : border-box;
+    border           : var( --border-width ) solid var( --colour-text-muted );
+    border-radius    : calc( var( --border-radius ) / 2 );
+    background-color : var( --colour-page );
+}
+
+.screenshot-checkbox[data-checked="true"]
+{
+    border-color     : var( --colour-accent );
+    background-color : var( --colour-accent );
+}
+
+.screenshot-checkbox__mark
+{
+    position           : absolute;
+    inset              : 0;
+    display            : block;
+    width              : 100%;
+    height             : 100%;
+    overflow           : visible;
+    pointer-events     : none;
+}
+
+.screenshot-checkbox__mark-path
+{
+    fill            : none;
+    stroke          : var( --colour-text-strong );
+    stroke-linecap  : round;
+    stroke-linejoin : round;
+    stroke-width    : 2.25px;
+}
+
+.screenshot-progress
+{
+    position : relative;
+}
+
+.screenshot-progress__value
+{
+    height           : 100%;
+    background-color : var( --colour-accent );
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   List status.
+
+   User resolution replaces stale achievement rows immediately. The replacement occupies the existing list surface,
+   preserving the card composition while making loading, success, and error states visible as well as announced.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.achievement-list__status
+{
+    flex             : 0 0 auto;
+    padding          : calc( 2 * var( --gap ) );
+    background-color : var( --colour-plate );
+    color            : var( --colour-text );
+}
+
+.achievement-list__status--error
+{
+    color : var( --colour-gold );
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   List viewport focus.
+
+   The list takes focus so that it can be scrolled by keyboard, so it needs a ring saying where Tab has landed --
+   the same accent ring the sort control uses, because the two are the page's only focus targets and a reader should
+   not have to learn two of them.
+
+   The ring is drawn on the list at zero offset, which puts it exactly outside the list's border box. The list fills
+   its frame precisely, so the ring lands on the card's plate in the standard gap that surrounds the frame, clear of
+   both the rows and the two bands drawn over the frame's top and bottom -- an unbroken rectangle rather than one
+   interrupted at either end. Keyboard focus only, for the same reason the control's ring is: a ring around the
+   whole list on every click in it would be noise.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.achievement-list:focus-visible
+{
+    outline        : var( --focus-ring-width ) solid var( --colour-accent );
+    outline-offset : 0;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Achievement row.
+
+   Each row is semantic text and a remote Steam icon rather than a captured plate. The 64px icon plus one standard
+   gap of padding above and below preserves the Version 1 80px rhythm. The copy column absorbs responsive width while
+   metadata keeps a predictable desktop measure; on narrow screens metadata moves below the copy and the row may grow.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.achievement-row
+{
+    flex                  : 0 0 auto;
+    min-height            : var( --row-height );
+    padding               : var( --gap );
+    display               : grid;
+    grid-template-columns : var( --achievement-icon-size ) minmax( 0, 1fr ) var( --achievement-metadata-width );
+    align-items            : center;
+    gap                    : var( --gap );
+    overflow               : hidden;
+    background-color      : var( --colour-plate );
+}
+
+.achievement-row__icon-frame
+{
+    width            : var( --achievement-icon-size );
+    height           : var( --achievement-icon-size );
+    display          : grid;
+    overflow         : hidden;
+    background-color : var( --colour-bar );
+}
+
+.achievement-row__icon,
+.achievement-row__icon-placeholder
+{
+    width      : 100%;
+    height     : 100%;
+    grid-area  : 1 / 1;
+}
+
+.achievement-row__icon
+{
+    object-fit : cover;
+}
+
+.achievement-row__icon[hidden],
+.achievement-row__icon-placeholder[hidden],
+.achievement-row__description[hidden]
+{
+    display : none;
+}
+
+.achievement-row__copy,
+.achievement-row__name,
+.achievement-row__description,
+.achievement-row__metadata,
+.achievement-row__rarity-text,
+.achievement-row__unlock-state
+{
+    min-width : 0;
+    display   : block;
+}
+
+.achievement-row__name
+{
+    overflow      : hidden;
+    color         : var( --colour-text-strong );
+    font-size     : var( --font-size-row-title );
+    font-weight   : var( --font-weight-strong );
+    text-overflow : ellipsis;
+    white-space   : nowrap;
+}
+
+.achievement-row__description
+{
+    margin-top    : calc( var( --gap ) / 2 );
+    overflow      : hidden;
+    color         : var( --colour-text );
+    text-overflow : ellipsis;
+    white-space   : nowrap;
+}
+
+.achievement-row__item-progress
+{
+    width                 : min( 100%, var( --achievement-item-progress-width ) );
+    margin-top            : calc( var( --gap ) / 2 );
+    display               : grid;
+    grid-template-columns : minmax( 0, 1fr ) max-content;
+    align-items           : center;
+    gap                   : var( --gap );
+}
+
+.achievement-row__item-progress-bar
+{
+    width              : 100%;
+    height             : var( --achievement-item-progress-height );
+    border             : 0;
+    overflow           : hidden;
+    appearance         : none;
+    -webkit-appearance : none;
+    background-color   : var( --colour-bar );
+    color              : var( --colour-accent );
+}
+
+.achievement-row__item-progress-bar::-webkit-progress-bar
+{
+    background-color : var( --colour-bar );
+}
+
+.achievement-row__item-progress-bar::-webkit-progress-value
+{
+    background-color : var( --colour-accent );
+}
+
+.achievement-row__item-progress-bar::-moz-progress-bar
+{
+    background-color : var( --colour-accent );
+}
+
+.achievement-row__item-progress-text
+{
+    color       : var( --colour-text-muted );
+    font-size   : var( --font-size-row-metadata );
+    white-space : nowrap;
+}
+
+.achievement-row__metadata
+{
+    width      : var( --achievement-metadata-width );
+    color      : var( --colour-text-muted );
+    font-size  : var( --font-size-row-metadata );
+    text-align : end;
+}
+
+.achievement-row__unlock-state
+{
+    margin-top  : var( --gap );
+    overflow    : hidden;
+    text-overflow : ellipsis;
+    white-space : nowrap;
+}
+
+.achievement-row[data-achievement-state="locked"] .achievement-row__icon
+{
+    filter  : grayscale( 1 );
+    opacity : var( --locked-icon-opacity );
+}
+
+.achievement-row[data-achievement-state="locked"] .achievement-row__description
+{
+    color : var( --colour-text-muted );
+}
+
+@media ( max-width: 560px )
+{
+    .achievement-row
+    {
+        grid-template-columns : var( --achievement-icon-size ) minmax( 0, 1fr );
+        align-items           : start;
+    }
+
+    .achievement-row__description
+    {
+        display            : -webkit-box;
+        white-space        : normal;
+        -webkit-box-orient : vertical;
+        -webkit-line-clamp : 2;
+    }
+
+    .achievement-row__metadata
+    {
+        width               : auto;
+        grid-column         : 2;
+        display             : flex;
+        align-items         : end;
+        justify-content     : space-between;
+        gap                 : var( --gap );
+        text-align          : start;
+    }
+
+    .achievement-row__rarity-text
+    {
+        flex : 1 1 auto;
+    }
+
+    .achievement-row__unlock-state
+    {
+        flex              : 0 1 auto;
+        margin-top        : 0;
+        text-align        : end;
+    }
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   List viewport scrollbar.
+
+   Two mechanisms, both applied, because no single one reaches all three engines.
+
+   The standard properties are the ones that carry the palette. `scrollbar-color` is honoured by Firefox, by Chromium
+   from 121, and by Safari from 18.2, which is every engine this project supports. `scrollbar-width: thin` narrows
+   the channel from the platform default to something in scale with the rows, and it is a request rather than a
+   measurement -- the engine picks the width, and it picks 10px in Chromium and 8px for Firefox's thin scrollbar.
+
+   The ::-webkit-scrollbar pseudo-elements below are for Safari before 18.2, which has no standard properties to
+   honour. They are inert wherever the standard ones apply: an engine that understands `scrollbar-width` or
+   `scrollbar-color` on an element stops consulting its scrollbar pseudo-elements for that element entirely.
+
+   These were previously gated behind `@supports not selector( ::-webkit-scrollbar )`, on the reasoning that the
+   engines without WebKit scrollbar pseudo-elements to offer are the ones that need the standard properties. The
+   premise is false and the gate never opened: Firefox parses any unknown `::-webkit-` pseudo-element rather than
+   discarding the rule, for web compatibility, so `selector( ::-webkit-scrollbar )` reports as supported there and
+   `not` is never satisfied. Firefox therefore reached none of the styling and drew a platform scrollbar in platform
+   colours -- and, worse, seeing the pseudo-element rules at all, it took them as a page asking for classic
+   scrollbars and switched this element away from overlay to a 17px one, which is where the rows' 7px of resampling
+   came from. Applying both unconditionally is correct in every engine and is what the gate was trying to express.
+
+   The thumb is the neutral grey rather than the accent. The accent is the rarity bar -- it is already on all 37 rows
+   and in the reward banner, where it carries a meaning -- so spending it again on a scrollbar would put a second
+   blue element beside them that says nothing, and pull the eye to the chrome instead of the content.
+
+   The track is a fifth darker than the plate rather than the plate itself. It is the only plate-coloured surface
+   inside the list frame, and at full strength it matched the card exactly, so the channel read as a strip of card
+   left behind inside the list. A fifth down gives it a value of its own, still well above the list's background.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.achievement-list
+{
+    scrollbar-width : thin;
+    scrollbar-color : var( --colour-scrollbar-thumb ) var( --colour-scrollbar-track );
+}
+
+.achievement-list::-webkit-scrollbar
+{
+    width : var( --scrollbar-width );
+}
+
+.achievement-list::-webkit-scrollbar-track
+{
+    background-color : var( --colour-scrollbar-track );
+}
+
+.achievement-list::-webkit-scrollbar-thumb
+{
+    border-radius    : var( --border-radius );
+    background-color : var( --colour-scrollbar-thumb );
+}

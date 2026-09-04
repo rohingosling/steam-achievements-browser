@@ -1,0 +1,35 @@
+# Public repository .gitignore.
+#
+# This file is OWNED by the public repo and preserved across promotions -- it is
+# never overwritten by tools/promote. Keep it free of any reference to private,
+# dev-only paths (those must never leave a trace in the public tree).
+
+# Node dependencies and package-manager caches.
+node_modules/
+.npm/
+
+# Cloudflare local state and development secrets.
+.wrangler/
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+
+# Build / distribution artifacts (release binaries ship as separate release assets,
+# not committed to the repo)
+build/
+dist/
+coverage/
+tmp/
+
+# Local logs and environment files.
+*.log
+.env
+.env.*
+
+# IDE / editor
+.idea/
+.vscode/
+
+# OS junk
+.DS_Store
+Thumbs.db

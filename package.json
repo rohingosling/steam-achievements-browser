@@ -1,0 +1,22 @@
+{
+    "name": "steam-achievement-browser",
+    "version": "2.0.0",
+    "private": true,
+    "description": "A Cloudflare-hosted browser for achievements in publicly visible Steam libraries.",
+    "type": "module",
+    "scripts": {
+        "check": "npm run typecheck && npm test",
+        "dev": "wrangler dev",
+        "test": "vitest run",
+        "test:browser:phase16": "node tools/phase16-browser-check.mjs",
+        "typecheck": "tsc --noEmit"
+    },
+    "engines": {
+        "node": ">=24"
+    },
+    "devDependencies": {
+        "typescript": "7.0.2",
+        "vitest": "4.1.11",
+        "wrangler": "4.127.1"
+    }
+}

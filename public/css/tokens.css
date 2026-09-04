@@ -1,0 +1,177 @@
+/*---------------------------------------------------------------------------------------------------------------------
+   File:   css/tokens.css
+   Author: Rohin Gosling
+
+   Description:
+
+     The design tokens -- palette, geometry, typography, and motion -- declared once as custom properties on :root.
+     This is the only stylesheet in which a literal colour value or a literal dimension appears; layout.css and
+     components.css consume these properties and never restate a raw value.
+
+     Every colour below began with the Version 1 captures and remains the palette for the semantic Version 2 surface.
+     The row interior is now HTML/CSS, so the palette can preserve that Steam-like identity without binding layout to
+     fixed-width screenshots. The application deliberately keeps one dark theme.
+
+     The 960px card maximum is the confirmed Phase 10 width. Semantic rows fill the responsive list column, while the
+     64px icon plus one standard gap above and below preserves the original 80px desktop row rhythm. The main progress
+     bar follows the responsive achievement-row column, and remote artwork is never forced above its intrinsic size.
+
+     The list scrolls inside a frame inset one standard gap from the card on the left, the right, and the bottom, so
+     that the card's own plate surface shows through as a border around it. There is no border above, because the
+     frame's top edge meets the control bar across the card's standard block gap -- the same plate again -- and the
+     two read as one surface rather than as two edges.
+
+     Inside that frame the rows are inset another standard gap on every side, which is the gap between two rows, so
+     a row sits the same distance from the frame's edge as it does from its neighbour. The scrollbar takes the last
+     10px of the frame rather than a column of its own outside it. This keeps a standard gap between row content and
+     the scrollbar and preserves the recessed Steam-panel well.
+---------------------------------------------------------------------------------------------------------------------*/
+
+:root
+{
+    /*-----------------------------------------------------------------------------------------------------------------
+       Palette.
+
+       Sampled, not chosen. The source of each value is recorded so that a re-capture can be checked against it.
+    -----------------------------------------------------------------------------------------------------------------*/
+
+    --colour-page             : #0e141b;    /* Gutter between rows in achievement-list.png.      Page background.    */
+    --colour-plate            : #23262e;    /* Flat plate sampled from the Version 1 rows.       Card and rows.      */
+    --colour-bar              : #2a2a2e;    /* Flat area of the reward banner.                   Sort control border.*/
+    --colour-accent           : #1a9fff;    /* Steam-like rarity and progress accent.            Focus ring.         */
+    --colour-gold             : #ffc82c;    /* Reward medal in the reward banner.                Reserved accent.    */
+    --colour-text             : #dcdedf;    /* Achievement title and description text.           Primary text.       */
+    --colour-text-muted       : #8b929a;    /* Unlock timestamp text.                            Labels, secondary.  */
+
+    /* The two colours below are derived rather than sampled. No shipped asset contains a scrollbar to sample
+       from, so each is taken from one that was: the track is the plate a fifth darker, the thumb the muted
+       text at 55%. The track is stepped down rather than left at the plate because it is the one plate-
+       coloured surface inside the list frame, and at full strength it matched the card exactly; a fifth
+       gives the channel a value of its own and still leaves it well above the list's background. The thumb
+       stays well clear of both. Neither may be the accent: the accent is the rarity bar, which appears on every row
+       and again in the reward banner, so painting the scrollbar with it puts a second blue element on screen that
+       stands for nothing. */
+
+    --colour-scrollbar-track  : #1c1e25;    /* Derived -- --colour-plate x 0.80.                 Scrollbar track.    */
+    --colour-scrollbar-thumb  : #4c5055;    /* Derived -- --colour-text-muted x 0.55.            Scrollbar thumb.    */
+    --colour-overlay-backdrop : rgba( 14, 20, 27, 0.82 ); /* Page colour with modal transparency. Export overlay. */
+
+    /* The one colour that is neither sampled nor derived. --colour-text is the brightest value in the row images,
+       so a title painted with it reads as one more row title rather than as the name of the whole card. Pure white
+       is the only value above it, and it paints exactly one element. */
+
+    --colour-text-strong      : #ffffff;    /* Chosen -- one step above --colour-text.           List title.         */
+
+    /*-----------------------------------------------------------------------------------------------------------------
+       Geometry.
+
+       The three widths are derived rather than restated, so that changing the card width or the gap propagates
+       correctly instead of silently disagreeing with the arithmetic above.
+    -----------------------------------------------------------------------------------------------------------------*/
+
+    --card-width              : 960px;
+    --user-card-width         : 520px;
+    --user-card-width         : 520px;
+    --gap                     : 8px;
+    --scrollbar-width         : 10px;
+    --achievement-card-footer-height : 26px;
+
+    --row-height              : 80px;
+    --achievement-icon-size   : 64px;
+    --achievement-metadata-width       : 176px;
+    --achievement-item-progress-width  : 240px;
+    --achievement-item-progress-height : 4px;
+
+    --progress-height         : 60px;
+    --progress-bar-height     : 8px;
+    --progress-rosette-width  : 40px;
+    --progress-rosette-height : 48px;
+
+    /* A full-width Library Hero is approximately 305px high inside the 960px desktop card. The fluid middle value
+       follows that proportion as the viewport narrows, while the 180px floor leaves the application motif legible on
+       phones. Every artwork and fallback state uses this one height, so changing sources cannot move the blocks
+       below. */
+
+    --banner-header-height    : clamp( 180px, 32.3vw, 305px );
+    --user-logo-size          : 96px;
+    --user-avatar-size        : 40px;
+    --user-logo-size          : 96px;
+    --user-avatar-size        : 40px;
+
+    /* The control bar's inner field height, plus a standard gap above and below on a one-line desktop bar. */
+
+    --control-height             : 28px;
+    --control-checkbox-size      : 16px;
+    --banner-action-width        : 104px;
+    --banner-action-inset        : 16px;
+    --banner-action-opacity      : 0.70;
+    --screenshot-width           : var( --card-width );
+    --screenshot-banner-height   : 305px;
+    --screenshot-stage-offset    : -100000px;
+    --screenshot-progress-width  : 424px;
+
+    /* Preferred field widths, not floors. Each is a flex basis and gives width back before pushing its label or the
+       title out of the bar. A select truncates a long selected option rather than growing, so these widths are chosen
+       for the control group rather than for the longest possible text. */
+
+    --game-select-width       : 180px;
+    --sort-select-width       : 220px;
+    --user-input-width        : 150px;
+
+    --border-radius           : 2px;
+    --border-width            : 1px;
+    --focus-ring-width        : 2px;
+
+    /*-----------------------------------------------------------------------------------------------------------------
+       Typography.
+
+       A system UI stack only. No web font is loaded and nothing is fetched from a CDN, so the page makes no network
+       request of any kind after the initial load.
+    -----------------------------------------------------------------------------------------------------------------*/
+
+    --font-family-ui          : system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-size-ui            : 13px;
+    --font-weight-ui          : 400;
+    --line-height-ui          : 1.4;
+
+    /* The list title, and only the list title. It is a point above the UI size rather than the same size, so that it
+       reads as the name of the card rather than as another control label -- but it stays well under the sort
+       control's height beside it, so the control bar's height is still the control's and the list geometry below is
+       untouched. Raising this past roughly 20px starts driving the bar's height instead of fitting inside it. */
+
+    --font-size-title         : 14px;
+    --font-size-user-title    : 24px;
+    --font-size-user-title    : 24px;
+    --font-size-row-title     : 15px;
+    --font-size-row-metadata  : 12px;
+    --font-size-card-footer   : 11px;
+    --font-size-banner-title  : 24px;
+    --font-weight-strong      : 700;        /* List title and banner text fallback. */
+
+    --locked-icon-opacity     : 0.72;
+
+    /*-----------------------------------------------------------------------------------------------------------------
+       Motion.
+
+       There is no sort animation, so this exists to give any transition introduced later a single place to be
+       suppressed from. See the reduced-motion override below.
+    -----------------------------------------------------------------------------------------------------------------*/
+
+    --transition-duration     : 120ms;
+    --transition-easing       : ease-out;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Reduced motion.
+
+   Collapsing the duration token to zero is enough: nothing may declare a transition duration except through this
+   token, so suppressing it here suppresses it everywhere.
+---------------------------------------------------------------------------------------------------------------------*/
+
+@media ( prefers-reduced-motion: reduce )
+{
+    :root
+    {
+        --transition-duration : 0ms;
+    }
+}

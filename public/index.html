@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<!---------------------------------------------------------------------------------------------------------------------
+     File:   index.html
+     Author: Rohin Gosling
+
+     Description:
+
+       Two sibling Steam-themed cards. The User ID card is active initially; the achievement card is revealed only
+       after a resolved user and visible library have both been accepted. The shared live region is outside both.
+---------------------------------------------------------------------------------------------------------------------->
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Browse achievements for a publicly visible Steam user without signing in.">
+    <title>Steam Achievement Browser</title>
+    <link rel="stylesheet" href="css/tokens.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script type="module" src="js/app.js"></script>
+</head>
+
+<body>
+    <main class="application" id="application" data-active-card="user-id">
+        <section class="user-card" id="user-id-card" aria-busy="false">
+            <img class="user-card__logo" src="images/ui/steam-logo.jpg" alt="" width="300" height="300">
+            <h1 class="user-card__title">Steam Achievement Browser</h1>
+            <p class="user-card__version">Version 2.0.0</p>
+            <form class="user-card__form" id="user-identifier-form">
+                <div class="user-card__field">
+                    <label class="user-card__label" for="user-identifier">SteamID</label>
+                    <input class="user-card__input"
+                           id="user-identifier"
+                           name="user-identifier"
+                           type="text"
+                           maxlength="200"
+                           autocomplete="off"
+                           spellcheck="false"
+                           placeholder="SteamID64, profile URL, or custom URL name"
+                           aria-describedby="user-identifier-help user-identifier-help-link user-card-status"
+                           aria-invalid="false">
+                    <button class="user-card__submit"
+                            id="continue-user"
+                            type="submit">Continue</button>
+                </div>
+                <div class="user-card__help">
+                    <p id="user-identifier-help">Enter a 17-digit SteamID64, a Steam Community profile URL, or your
+                        custom Steam Community URL name.</p>
+                    <p id="user-identifier-help-link">Need help finding your SteamID? Follow
+                        <a class="user-card__help-link"
+                           href="https://help.steampowered.com/en/faqs/view/2816-BE67-5B69-0FEC"
+                           aria-label="Steam Support instructions for finding your SteamID">Steam Support’s
+                            instructions</a>.
+                    </p>
+                </div>
+                <p class="user-card__status" id="user-card-status"></p>
+            </form>
+        </section>
+
+        <section class="achievement-card" id="achievement-card" hidden>
+            <header class="achievement-card__block banner-header">
+                <div class="banner-header__artwork" id="game-banner-artwork" hidden>
+                    <img class="banner-header__image" id="game-banner-image" alt="" hidden>
+                    <img class="banner-header__game-logo" id="game-banner-logo" alt="" hidden>
+                </div>
+                <div class="banner-header__fallback" id="game-banner-fallback">
+                    <img class="banner-header__logo"
+                         id="game-banner-fallback-logo"
+                         src="images/ui/steam-logo.jpg"
+                         alt=""
+                         width="300"
+                         height="300">
+                    <p class="banner-header__title" id="game-banner-fallback-text">Steam Achievement Browser</p>
+                    <p class="banner-header__version" id="game-banner-fallback-version">Version 2.0.0</p>
+                </div>
+                <div class="banner-header__actions">
+                    <button class="banner-header__action change-user"
+                            id="change-user"
+                            type="button">Change User</button>
+                    <button class="banner-header__action banner-header__action--screenshot"
+                            id="save-achievement-screenshot"
+                            type="button"
+                            title="Save achievement screenshot as PNG"
+                            disabled>Screenshot</button>
+                </div>
+            </header>
+
+            <section class="achievement-card__block achievement-progress"
+                     id="achievement-progress"
+                     aria-label="Achievement progress"
+                     aria-busy="false"
+                     data-progress-complete="false">
+                <svg class="achievement-progress__rosette" id="achievement-progress-rosette" viewBox="0 0 48 56"
+                     aria-hidden="true" focusable="false" hidden>
+                    <path class="achievement-progress__rosette-ribbon" d="M13 31 L11 54 L21 48 L25 55 L27 32 Z"></path>
+                    <path class="achievement-progress__rosette-ribbon" d="M35 31 L37 54 L27 48 L23 55 L21 32 Z"></path>
+                    <path class="achievement-progress__rosette-seal"
+                          d="M24 2 L28 7 L34 5 L36 11 L42 12 L40 18 L45 22 L40 26 L42 32 L36 33 L34 39 L28 37 L24 42 L20 37 L14 39 L12 33 L6 32 L8 26 L3 22 L8 18 L6 12 L12 11 L14 5 L20 7 Z"></path>
+                    <circle class="achievement-progress__rosette-centre" cx="24" cy="22" r="13"></circle>
+                    <path class="achievement-progress__rosette-star"
+                          d="M24 11 L27 18 L35 18 L29 23 L31 31 L24 27 L17 31 L19 23 L13 18 L21 18 Z"></path>
+                </svg>
+                <div class="achievement-progress__content">
+                    <div class="achievement-progress__summary-row">
+                        <p class="achievement-progress__summary" id="achievement-progress-summary"></p>
+                        <span class="achievement-progress__percentage" id="achievement-progress-percentage" aria-hidden="true" hidden></span>
+                    </div>
+                    <progress class="achievement-progress__bar" id="achievement-progress-bar" max="1"
+                              aria-labelledby="achievement-progress-summary" hidden></progress>
+                </div>
+            </section>
+
+            <div class="achievement-card__block control-bar">
+                <div class="control-bar__identity">
+                    <span class="control-bar__avatar-frame" id="user-avatar-frame" data-avatar-state="fallback">
+                        <span class="control-bar__avatar-placeholder" id="user-avatar-placeholder" aria-hidden="true"></span>
+                        <img class="control-bar__avatar" id="user-avatar" alt="" width="40" height="40" hidden>
+                    </span>
+                    <h1 class="control-bar__title" id="achievement-card-title" tabindex="-1">
+                        <span class="control-bar__persona" id="achievement-persona-name"></span><span
+                              class="control-bar__title-suffix"> – Steam Achievements</span>
+                    </h1>
+                </div>
+
+                <div class="control-bar__controls">
+                    <div class="control-bar__field control-bar__field--game">
+                        <label class="control-bar__label" for="game-field">Game</label>
+                        <select class="control-bar__select control-bar__select--game" id="game-field" disabled>
+                            <option value="">Enter a Steam user</option>
+                        </select>
+                    </div>
+                    <div class="control-bar__field control-bar__field--sort">
+                        <label  class="control-bar__label"                           for="sort-field">Sort</label>
+                        <select class="control-bar__select control-bar__select--sort" id="sort-field" disabled></select>
+                    </div>
+                    <div class="control-bar__toggle">
+                        <label class="control-bar__label" for="show-locked-achievements">Show locked Achievements</label>
+                        <input class="control-bar__checkbox"
+                               id="show-locked-achievements"
+                               name="show-locked-achievements"
+                               type="checkbox"
+                               disabled>
+                    </div>
+                </div>
+            </div>
+
+            <div class="achievement-card__block achievement-list-frame">
+                <ul class="achievement-list"
+                    id="achievement-list"
+                    tabindex="0"
+                    aria-label="Steam Achievements"></ul>
+            </div>
+
+            <footer class="achievement-card__footer">
+                <a class="achievement-card__github-link"
+                   href="https://github.com/rohingosling/steam-achievements-browser">GitHub - Steam Achievements Browser</a>
+            </footer>
+        </section>
+
+        <dialog class="screenshot-progress-dialog"
+                id="screenshot-progress-dialog"
+                aria-labelledby="screenshot-progress-title"
+                aria-describedby="screenshot-progress-message">
+            <div class="screenshot-progress-dialog__content">
+                <h2 class="screenshot-progress-dialog__title"
+                    id="screenshot-progress-title"
+                    tabindex="-1">Generating screenshot</h2>
+                <p class="screenshot-progress-dialog__stage" id="screenshot-progress-stage">Stage 1 of 5</p>
+                <progress class="screenshot-progress-dialog__bar"
+                          id="screenshot-progress-bar"
+                          max="5"
+                          value="0"
+                          aria-labelledby="screenshot-progress-title screenshot-progress-stage"></progress>
+                <p class="screenshot-progress-dialog__message"
+                   id="screenshot-progress-message">Preparing screenshot layout…</p>
+                <p class="visually-hidden"
+                   id="screenshot-progress-announcement"
+                   role="status"
+                   aria-live="polite"
+                   aria-atomic="true"></p>
+            </div>
+        </dialog>
+
+        <div class="visually-hidden" id="application-status" role="status" aria-live="polite"></div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,573 @@
+/*---------------------------------------------------------------------------------------------------------------------
+   File:   css/layout.css
+   Author: Rohin Gosling
+
+   Description:
+
+     The page shell and the card: the base reset, the document background and type, the card blocks and how they
+     divide the viewport's height between them, and the off-screen utility used by the live region. What sits inside
+     each block -- the sort control, the row, the scrollbar -- is styled in components.css.
+
+     No literal colour or dimension appears in this file. Everything comes from css/tokens.css.
+
+   Notes:
+
+     The image base rule caps remote Steam artwork and achievement icons at the width of their containers.
+
+     The card is a flex column at 100dvh. The three fixed blocks take their intrinsic heights and the list takes
+     whatever is left over, which is what makes the list the only scrolling region and the page itself never scroll.
+     dvh rather than vh, so the layout tracks a collapsing mobile address bar instead of hiding content beneath it.
+---------------------------------------------------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Base reset.
+
+   Border-box sizing throughout, so that the padding and the reserved scrollbar gutter subtract from a declared width
+   instead of adding to it. The card arithmetic assumes this.
+---------------------------------------------------------------------------------------------------------------------*/
+
+*,
+*::before,
+*::after
+{
+    box-sizing : border-box;
+}
+
+body,
+h1, h2, h3, h4, h5, h6,
+p,
+ul, ol, li,
+figure
+{
+    margin  : 0;
+    padding : 0;
+}
+
+ul
+{
+    list-style : none;
+}
+
+img
+{
+    display   : block;
+    max-width : 100%;
+    height    : auto;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Page shell.
+
+   The background is the gutter colour sampled from between the rows of the source capture, so the space around the
+   card reads as the same surface the rows were cut out of.
+
+   The document itself never scrolls. The card is exactly one viewport tall and clips its own overflow, so this is
+   already true by construction; declaring it on the body as well states the intent and holds it if a later block
+   ever grows past its intrinsic height.
+---------------------------------------------------------------------------------------------------------------------*/
+
+html
+{
+    background-color : var( --colour-page );
+}
+
+body
+{
+    min-width                : 0;
+    background-color         : var( --colour-page );
+    color                    : var( --colour-text );
+    font-family              : var( --font-family-ui );
+    font-size                : var( --font-size-ui );
+    font-weight              : var( --font-weight-ui );
+    line-height              : var( --line-height-ui );
+    -webkit-font-smoothing   : antialiased;
+    -moz-osx-font-smoothing  : grayscale;
+}
+
+[hidden]
+{
+    display : none !important;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   The card.
+
+   Centred at the 960px desktop maximum confirmed for semantic rows. Below that the card takes the whole viewport and
+   the row grid reflows without scaling text or raster row captures.
+
+   Height is one viewport with overflow hidden. The card is therefore a fixed frame that the list scrolls inside,
+   rather than a box the page grows to contain.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.application
+{
+    min-height     : 100dvh;
+    display        : grid;
+    align-items    : safe center;
+    justify-items  : center;
+    padding-inline : var( --gap );
+}
+
+.application[data-active-card="user-id"]
+{
+    overflow-y : auto;
+}
+
+.application[data-active-card="achievements"]
+{
+    padding-inline : 0;
+}
+
+.user-card
+{
+    width            : min( var( --user-card-width ), 100% );
+    padding          : calc( 3 * var( --gap ) );
+    background-color : var( --colour-plate );
+}
+
+.user-card__field
+{
+    display               : grid;
+    grid-template-columns : max-content minmax( 0, 1fr ) max-content;
+    align-items           : center;
+    gap                   : var( --gap );
+}
+
+.achievement-card
+{
+    position         : relative;
+    width            : min( var( --card-width ), 100% );
+    height           : 100dvh;
+    margin-inline    : auto;
+    padding-top      : var( --gap );
+    display          : flex;
+    flex-direction   : column;
+    gap              : var( --gap );
+    overflow         : hidden;
+    background-color : var( --colour-plate );
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Card blocks.
+
+   All primary content blocks are inset by a standard gap on each side. The list frame and banner therefore share one
+   responsive column, and the card's own plate surface shows through down either side of the list as its border.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.achievement-card__block
+{
+    flex : 0 0 auto;
+}
+
+.banner-header,
+.achievement-progress,
+.control-bar,
+.achievement-list-frame
+{
+    margin-inline : var( --gap );
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Block 1 of 4 -- dynamic game banner.
+
+   One responsive fixed height is shared by every banner state. Library Heroes fill the available width at the desktop
+   maximum, while narrower artwork, icons, text, and the no-selection application motif remain centred without moving
+   the progress, controls, or list below. Both dimensions constrain artwork so unusual assets cannot overflow or crop.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.banner-header
+{
+    height          : var( --banner-header-height );
+    position        : relative;
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+    overflow        : hidden;
+}
+
+.banner-header__actions
+{
+    position           : absolute;
+    inset-block-start  : var( --banner-action-inset );
+    inset-inline-end   : var( --banner-action-inset );
+    display            : flex;
+    flex-direction     : column;
+    gap                : var( --banner-action-inset );
+    z-index            : 1;
+}
+.banner-header__image
+{
+    max-width  : 100%;
+    max-height : 100%;
+    width      : auto;
+    height     : auto;
+    object-fit : contain;
+}
+
+.banner-header__artwork
+{
+    max-width       : 100%;
+    max-height      : 100%;
+    position        : relative;
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+}
+
+.banner-header__artwork[data-artwork-kind="library-hero"]
+{
+    width        : 100%;
+    aspect-ratio : 3840 / 1240;
+}
+
+.banner-header__artwork[data-artwork-kind="library-hero"] .banner-header__image
+{
+    width  : 100%;
+    height : 100%;
+}
+
+.banner-header__artwork[data-artwork-kind="fallback"]
+{
+    width  : 100%;
+    height : 100%;
+}
+
+.banner-header__artwork[hidden],
+.banner-header__image[hidden],
+.banner-header__game-logo[hidden],
+.banner-header__fallback[hidden]
+{
+    display : none;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Block 2 of 4 -- achievement progress.
+
+   The semantic region spans the same inset column as the achievement list. Its fixed minimum height prevents progress
+   wording or an indeterminate native bar from moving the control bar while a selected game loads.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.achievement-progress
+{
+    min-height : var( --progress-height );
+    align-self : stretch;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Block 3 of 4 -- control bar.
+
+   The list title occupies the leading edge. Native controls live in a group pushed to the trailing edge by an
+   automatic inline-start margin, keeping their labels and fields together without a decorative spacer element.
+
+   The bar's height is the control's height plus a standard gap above and below. The title does not change it: it is
+   set at the UI font size, so it is shorter than the control beside it.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.control-bar
+{
+    display               : grid;
+    grid-template-columns : minmax( 0, 1fr ) max-content;
+    align-items           : center;
+    gap                   : var( --gap );
+    padding               : var( --gap );
+    background-color      : var( --colour-plate );
+}
+
+.control-bar__controls
+{
+    min-width   : 0;
+    display     : flex;
+    align-items : center;
+    gap         : var( --gap );
+}
+
+/* Switch before the preferred one-line controls would make the complete Steam Achievements heading shrink. The
+   controls become one shared two-column grid: max-content measures the widest rendered label, so all three native
+   fields begin on precisely the same inline edge. Each field contributes one label/control pair through display:
+   contents and therefore occupies exactly one row. */
+
+@media ( max-width: 900px )
+{
+    .control-bar
+    {
+        grid-template-columns : max-content minmax( 0, 1fr );
+        align-items           : center;
+    }
+
+    .control-bar__identity
+    {
+        grid-column : 1 / -1;
+    }
+
+    .control-bar__controls
+    {
+        width                 : 100%;
+        grid-column           : 1 / -1;
+        display               : grid;
+        grid-template-columns : max-content minmax( 0, 1fr );
+        align-items           : center;
+        column-gap            : var( --gap );
+        row-gap               : var( --gap );
+    }
+
+    /* The child-qualified selector must outrank components.css's later base .control-bar__field display rule. */
+
+    .control-bar__controls > .control-bar__field,
+    .control-bar__controls > .control-bar__toggle
+    {
+        display : contents;
+    }
+
+    .control-bar__select
+    {
+        width : 100%;
+    }
+}
+
+@media ( max-width: 560px )
+{
+    .application
+    {
+        padding-inline : 0;
+    }
+
+    .user-card__field
+    {
+        grid-template-columns : minmax( 0, 1fr );
+    }
+
+    .user-card__submit
+    {
+        width      : 100%;
+        min-height : calc( var( --control-height ) + 2 * var( --gap ) );
+    }
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Achievement list viewport.
+
+   Two elements rather than one. The frame is the box the list sits in and the only flex item the card sees; the
+   list is the scroll container inside it. They are separate because the frame paints the two bands that hide the
+   rows at the top and bottom of the list, and a scroll container cannot paint over its own overflowing content --
+   its background sits behind that content, and its padding does not clip it -- so the bands have to belong to
+   something outside the scrolling box.
+
+   The frame claims the height the three fixed blocks leave. min-height: 0 is what allows it to be shorter than its
+   own content -- without it, a flex item's automatic minimum size is its content size, the frame would refuse to
+   shrink, and the card would overflow the viewport instead of the list scrolling inside it. It is inset one gap
+   from the card on the left and the right along with the other blocks. The card gap below the frame and the fixed
+   footer extend the visible bottom plate by 26px while leaving the list as the only scrolling region. There is no
+   border above: the frame's top edge meets the control bar across the card's own block gap, which is that same plate,
+   so the two read as one surface rather than as two edges.
+
+   The scrollbar gutter is reserved permanently rather than on demand, so responsive semantic rows do not shift when
+   the list first becomes scrollable or when a resize removes the scrollbar.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.achievement-list-frame
+{
+    position         : relative;
+    flex             : 1 1 auto;
+    min-height       : 0;
+    display          : flex;
+    background-color : var( --colour-page );
+}
+
+.achievement-card__footer
+{
+    height           : var( --achievement-card-footer-height );
+    flex             : 0 0 var( --achievement-card-footer-height );
+    margin-inline    : var( --gap );
+    padding-block-end : var( --gap );
+    display          : flex;
+    align-items      : flex-end;
+    justify-content  : flex-end;
+    min-width        : 0;
+}
+
+.achievement-list
+{
+    flex             : 1 1 auto;
+    min-width        : 0;
+    overflow-y       : scroll;
+    overflow-x       : hidden;
+    scrollbar-gutter : stable;
+    padding-block    : var( --gap );
+    padding-inline   : var( --gap );
+    display          : flex;
+    flex-direction   : column;
+    gap              : var( --gap );
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   The occluding bands.
+
+   The list's block padding puts a standard gap above the first row and below the last one, but padding does not
+   clip: a row scrolled past it is still drawn there, right out to the frame's edge, so a row arriving at the top
+   ran into the control bar above and a row leaving at the bottom ran into the card's own edge below. These two
+   bands are drawn over that padding in the list's background colour, so a row slides underneath one and is gone
+   before it reaches either edge.
+
+   They belong to the frame rather than to the list precisely because they must not scroll, and they stop one
+   scrollbar width short of the trailing edge -- which is exactly the list's padding box -- so the scrollbar runs
+   the full height of the frame instead of being capped at each end.
+
+   They need no z-index. They are positioned and the rows are not, so within the card's stacking context they
+   already paint after every row.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.achievement-list-frame::before,
+.achievement-list-frame::after
+{
+    content          : '';
+    position         : absolute;
+    inset-inline     : 0 var( --scrollbar-width );
+    height           : var( --gap );
+    background-color : var( --colour-page );
+    pointer-events   : none;
+}
+
+.achievement-list-frame::before
+{
+    inset-block-start : 0;
+}
+
+.achievement-list-frame::after
+{
+    inset-block-end : 0;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Screenshot generation overlay.
+
+   The native dialog lives beside both cards rather than inside the achievement card, so it can occupy the browser's
+   top layer without ever entering the detached export clone. Its width remains compact on desktop and gives back
+   space symmetrically on narrow or short viewports.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.screenshot-progress-dialog
+{
+    width      : min( var( --screenshot-progress-width ), calc( 100% - ( 4 * var( --gap ) ) ) );
+    max-width  : none;
+    max-height : calc( 100dvh - ( 4 * var( --gap ) ) );
+    margin     : auto;
+    overflow   : auto;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Screenshot export layout.
+
+   The detached clone uses the native 960px desktop card composition. Its list grows to its complete
+   currently visible content, reserves no scrollbar gutter, and restores equal inline padding after the scrollbar is
+   removed. The overlaid hero actions and live-only GitHub footer never enter the clone, whose standard 8px bottom
+   border is restored with card padding.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.screenshot-stage
+{
+    position           : fixed;
+    inset-block-start  : 0;
+    inset-inline-start : var( --screenshot-stage-offset );
+    width              : var( --screenshot-width );
+    pointer-events     : none;
+}
+
+.screenshot-document
+{
+    width            : var( --screenshot-width );
+    margin           : 0;
+    background-color : var( --colour-page );
+    color            : var( --colour-text );
+    font-family      : var( --font-family-ui );
+    font-size        : var( --font-size-ui );
+    font-weight      : var( --font-weight-ui );
+    line-height      : var( --line-height-ui );
+}
+
+.achievement-card--screenshot
+{
+    width          : var( --screenshot-width );
+    height         : auto;
+    min-height     : 0;
+    padding-bottom : var( --gap );
+    overflow       : visible;
+}
+
+.achievement-card--screenshot .banner-header
+{
+    height : var( --screenshot-banner-height );
+}
+
+.achievement-card--screenshot .control-bar
+{
+    grid-template-columns : minmax( 0, 1fr ) max-content;
+}
+
+.achievement-card--screenshot .control-bar__identity
+{
+    grid-column : auto;
+}
+
+.achievement-card--screenshot .control-bar__controls
+{
+    width       : auto;
+    grid-column : auto;
+    display     : flex;
+}
+
+.achievement-card--screenshot .control-bar__controls > .control-bar__field,
+.achievement-card--screenshot .control-bar__controls > .control-bar__toggle
+{
+    display : flex;
+}
+
+.achievement-card--screenshot .control-bar__select
+{
+    width : auto;
+}
+
+.achievement-card--screenshot .achievement-list-frame
+{
+    height           : auto;
+    flex             : 0 0 auto;
+    min-height       : 0;
+}
+
+.achievement-card--screenshot .achievement-list
+{
+    width            : 100%;
+    height           : auto;
+    flex             : 0 0 auto;
+    overflow         : visible;
+    scrollbar-width  : none;
+    scrollbar-gutter : auto;
+    padding-inline   : var( --gap );
+}
+
+.achievement-card--screenshot .achievement-list::-webkit-scrollbar,
+.achievement-card--screenshot .achievement-list-frame::before,
+.achievement-card--screenshot .achievement-list-frame::after
+{
+    display : none;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+   Utilities.
+
+   visually-hidden removes an element from the visual page while leaving it in the accessibility tree. It is used by
+   the polite live region that announces the newly applied sort order, which has content for a screen reader and
+   nothing to show anyone else.
+---------------------------------------------------------------------------------------------------------------------*/
+
+.visually-hidden
+{
+    position    : absolute;
+    width       : 1px;
+    height      : 1px;
+    margin      : -1px;
+    padding     : 0;
+    border      : 0;
+    overflow    : hidden;
+    white-space : nowrap;
+    clip-path   : inset( 50% );
+}
